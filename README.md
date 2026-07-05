@@ -71,3 +71,5 @@ public/
 - PWA icons are SVG. If you target stores that require raster icons, drop
   `icon-192.png` / `icon-512.png` into `public/icons/` and update the
   `manifest.icons` block in `astro.config.mjs`.
+
+
