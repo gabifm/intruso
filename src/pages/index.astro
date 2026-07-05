@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Lobby from "../components/Lobby.tsx";
+import RoleReveal from "../components/RoleReveal.tsx";
+import QuestionPhase from "../components/QuestionPhase.tsx";
+import Voting from "../components/Voting.tsx";
+import Resolution from "../components/Resolution.tsx";
+import GameRouter from "../components/GameRouter.tsx";
+---
+
+<!--
+  Conditional rendering based on the active phase happens inside
+  GameRouter (a client-hydrated React component) because Zustand hooks
+  must run in the browser. Astro only mounts the router here.
+  All phase components (Lobby, RoleReveal, QuestionPhase, Voting, Resolution)
+  are imported by GameRouter and switched on `phase` from the store.
+-->
+<Layout>
+  <GameRouter client:load />
+</Layout>
