@@ -25,19 +25,19 @@ export default function Resolution() {
           caughtImposter ? 'text-green-500' : 'text-red-500'
         }`}
       >
-        {caughtImposter ? 'CIVILIANS WIN!' : 'IMPOSTER WINS!'}
+        {caughtImposter ? '¡GANAN LOS CIVILES!' : '¡GANÓ EL INTRUSO!'}
       </h2>
 
       <p className="mb-8 text-2xl text-white">
         {caughtImposter
-          ? 'You caught the Imposter!'
-          : `${accused?.name ?? 'They'} was innocent.`}
+          ? '¡Atrapaste al Intruso!'
+          : `${accused?.name ?? 'Alguien'} era inocente.`}
       </p>
 
       <div className="mb-8 w-full max-w-md space-y-4">
         <div className="rounded-2xl bg-gray-800 px-6 py-5">
           <p className="text-sm font-bold uppercase tracking-widest text-gray-500">
-            The Imposter was
+            El Intruso era
           </p>
           <p className="mt-1 text-3xl font-black text-red-400">
             {imposter?.name ?? '???'}
@@ -46,7 +46,7 @@ export default function Resolution() {
 
         <div className="rounded-2xl bg-gray-800 px-6 py-5">
           <p className="text-sm font-bold uppercase tracking-widest text-gray-500">
-            Category
+            Categoría
           </p>
           <p className="mt-1 text-3xl font-black text-white">
             {category ?? '???'}
@@ -55,7 +55,7 @@ export default function Resolution() {
 
         <div className="rounded-2xl bg-gray-800 px-6 py-5">
           <p className="text-sm font-bold uppercase tracking-widest text-gray-500">
-            Secret Word
+            Palabra Secreta
           </p>
           <p className="mt-1 text-3xl font-black text-orange-400">
             {word ?? '???'}
@@ -67,7 +67,7 @@ export default function Resolution() {
         onClick={() => resetGame()}
         className="w-full max-w-sm rounded-2xl bg-orange-500 py-8 text-2xl font-black text-white shadow-lg shadow-orange-500/30 active:scale-95"
       >
-        Play Again
+        Jugar de Nuevo
       </button>
     </div>
   );

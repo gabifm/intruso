@@ -34,7 +34,7 @@ export default function Lobby() {
           El Intruso
         </h1>
         <p className="mt-2 text-lg text-gray-400">
-          Add players to begin. Minimum 3.
+          Añade jugadores para empezar. Mínimo 3.
         </p>
       </header>
 
@@ -43,7 +43,7 @@ export default function Lobby() {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Player name"
+          placeholder="Nombre del jugador"
           maxLength={20}
           autoComplete="off"
           autoCapitalize="words"
@@ -54,7 +54,7 @@ export default function Lobby() {
           disabled={!name.trim()}
           className="shrink-0 rounded-2xl bg-gray-800 px-8 text-2xl font-bold text-white active:scale-95 disabled:opacity-40"
         >
-          Add
+          Añadir
         </button>
       </form>
 
@@ -67,7 +67,7 @@ export default function Lobby() {
             <div className="flex items-center gap-3">
               {p.isHost && (
                 <span className="rounded-full bg-orange-500/20 px-3 py-1 text-sm font-bold text-orange-400">
-                  HOST
+                  ANFITRIÓN
                 </span>
               )}
               <span className="text-2xl font-semibold text-white">
@@ -76,7 +76,7 @@ export default function Lobby() {
             </div>
             <button
               onClick={() => removePlayer(p.name)}
-              aria-label={`Remove ${p.name}`}
+              aria-label={`Eliminar a ${p.name}`}
               className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500/15 text-3xl font-bold text-red-400 active:scale-90"
             >
               ×
@@ -85,14 +85,14 @@ export default function Lobby() {
         ))}
         {players.length === 0 && (
           <li className="mt-6 text-center text-xl text-gray-600">
-            No players yet.
+            Aún no hay jugadores.
           </li>
         )}
       </ul>
 
       <section className="mb-6">
         <h2 className="mb-3 text-xl font-bold uppercase tracking-widest text-gray-500">
-          Select Deck
+          Elige Mazo
         </h2>
         <div className="space-y-3">
           {GAME_PACKS.map((pack) => {
@@ -118,7 +118,7 @@ export default function Lobby() {
                   {pack.description}
                 </p>
                 <p className="mt-2 text-sm text-gray-500">
-                  {pack.categories.length} categories
+                  {pack.categories.length} categorías
                 </p>
               </button>
             );
@@ -131,7 +131,7 @@ export default function Lobby() {
         disabled={!canStart}
         className="w-full rounded-2xl bg-orange-500 py-6 text-2xl font-black text-white shadow-lg shadow-orange-500/30 active:scale-95 disabled:bg-gray-700 disabled:text-gray-500 disabled:shadow-none"
       >
-        {canStart ? 'Start Game' : `Need ${3 - players.length} more`}
+        {canStart ? 'Empezar Partida' : `Faltan ${3 - players.length}`}
       </button>
     </div>
   );

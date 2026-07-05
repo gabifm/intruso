@@ -316,8 +316,8 @@ export const selectQuestioner = (s: GameStore): Player | null => {
 
 /**
  * Returns the text a player should see during ROLE_REVEAL.
- * - Civilian: "The Category is <Category>. The Word is <Word>."
- * - Imposter: "The Category is <Category>. YOU ARE THE IMPOSTER."
+ * - Civilian: "La Categoría es <Category>. La Palabra es <Word>."
+ * - Imposter: "La Categoría es <Category>. TÚ ERES EL INTRUSO."
  */
 export function selectRoleRevealText(
   s: GameStore,
@@ -325,9 +325,9 @@ export function selectRoleRevealText(
 ): string {
   const role = s.roles[playerId];
   const category = s.category ?? '???';
-  if (!role) return 'Unknown role.';
+  if (!role) return 'Rol desconocido.';
   if (role === 'IMPOSTER') {
-    return `The Category is ${category}. YOU ARE THE IMPOSTER.`;
+    return `La Categoría es ${category}. TÚ ERES EL INTRUSO.`;
   }
-  return `The Category is ${category}. The Word is ${s.word ?? '???'}.`;
+  return `La Categoría es ${category}. La Palabra es ${s.word ?? '???'}.`;
 }

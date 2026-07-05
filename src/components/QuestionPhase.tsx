@@ -62,7 +62,7 @@ export default function QuestionPhase() {
   return (
     <div className="flex h-full flex-col items-center justify-center px-6 text-center">
       <p className="mb-3 text-xl uppercase tracking-widest text-gray-500">
-        Time remaining
+        Tiempo restante
       </p>
       <p
         className={`mb-2 font-mono text-8xl font-black tabular-nums ${
@@ -73,14 +73,14 @@ export default function QuestionPhase() {
       </p>
 
       <p className="mb-12 text-lg text-gray-400">
-        {questioner ? `${questioner.name} is asking.` : 'Discuss the category.'}
+        {questioner ? `${questioner.name} está preguntando.` : 'Discutid la categoría.'}
       </p>
 
       <button
         onClick={() => goToVoting()}
         className="w-full max-w-sm rounded-2xl bg-purple-600 py-8 text-2xl font-black text-white shadow-lg shadow-purple-600/30 active:scale-95"
       >
-        Go to Voting
+        Ir a Votación
       </button>
     </div>
   );

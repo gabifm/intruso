@@ -23,8 +23,8 @@ export default function Voting() {
   return (
     <div className="flex h-full flex-col px-6 py-8">
       <header className="mb-8 text-center">
-        <h2 className="text-4xl font-black text-white">Who is the Imposter?</h2>
-        <p className="mt-2 text-lg text-gray-400">Tap a player to accuse.</p>
+        <h2 className="text-4xl font-black text-white">¿Quién es el Intruso?</h2>
+        <p className="mt-2 text-lg text-gray-400">Toca un jugador para acusarlo.</p>
       </header>
 
       <ul className="flex-1 space-y-3 overflow-y-auto">
@@ -49,7 +49,7 @@ export default function Voting() {
             className="w-full max-w-sm rounded-3xl bg-gray-900 p-8 text-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <p className="mb-2 text-lg text-gray-400">Accuse</p>
+            <p className="mb-2 text-lg text-gray-400">Acusar a</p>
             <p className="mb-8 text-4xl font-black text-white break-words">
               {accused.name}
             </p>
@@ -58,13 +58,13 @@ export default function Voting() {
                 onClick={handleConfirm}
                 className="w-full rounded-2xl bg-red-500 py-6 text-2xl font-black text-white active:scale-95"
               >
-                Confirm Accusation
+                Confirmar Acusación
               </button>
               <button
                 onClick={() => setConfirmId(null)}
                 className="w-full rounded-2xl bg-gray-700 py-5 text-xl font-bold text-white active:scale-95"
               >
-                Cancel
+                Cancelar
               </button>
             </div>
           </div>
