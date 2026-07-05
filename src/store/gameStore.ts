@@ -66,6 +66,8 @@ export interface GameState extends GamePhaseState {
   roles: RoleMap;
   /** Convenience: id of the imposter for this round. */
   imposterId: PlayerId | null;
+  /** Random play/reveal order for this round (player ids shuffled). */
+  revealOrder: PlayerId[];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -95,6 +97,7 @@ const initialState: GameState = {
   word: null,
   roles: {},
   imposterId: null,
+  revealOrder: [],
 };
 
 /* -------------------------------------------------------------------------- */
@@ -103,6 +106,16 @@ const initialState: GameState = {
 
 function pickRandom<T>(items: readonly T[]): T {
   return items[Math.floor(Math.random() * items.length)];
+}
+
+/** Fisher-Yates shuffle returning a new array. */
+function shuffle<T>(items: readonly T[]): T[] {
+  const out = [...items];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -178,6 +191,9 @@ export const useGameStore = create<GameStore>()(
             roles[p.id] = p.id === imposter.id ? 'IMPOSTER' : 'CIVILIAN';
           }
 
+          // Random play/reveal order for this round.
+          const revealOrder = shuffle(state.players.map((p) => p.id));
+
           // Reset per-round flags
           const players = state.players.map((p) => ({
             ...p,
@@ -191,6 +207,7 @@ export const useGameStore = create<GameStore>()(
             category,
             roles,
             imposterId: imposter.id,
+            revealOrder,
             phase: 'ROLE_REVEAL',
             currentRevealIndex: 0,
           } as GameStore;
@@ -205,8 +222,9 @@ export const useGameStore = create<GameStore>()(
           if (state.phase !== 'ROLE_REVEAL') return state;
 
           const currentIndex = state.currentRevealIndex;
-          const players = state.players.map((p, i) =>
-            i === currentIndex ? { ...p, hasSeenRole: true } : p
+          const currentId = state.revealOrder[currentIndex];
+          const players = state.players.map((p) =>
+            p.id === currentId ? { ...p, hasSeenRole: true } : p
           );
 
           const nextIndex = currentIndex + 1;
@@ -306,12 +324,24 @@ export const selectRoleForPlayer = (s: GameStore, id: PlayerId): Role | null =>
 
 export const selectCurrentRevealPlayer = (s: GameStore): Player | null => {
   if (s.phase !== 'ROLE_REVEAL') return null;
-  return s.players[s.currentRevealIndex] ?? null;
+  const id = s.revealOrder[s.currentRevealIndex];
+  if (!id) return null;
+  return s.players.find((p) => p.id === id) ?? null;
 };
 
 export const selectQuestioner = (s: GameStore): Player | null => {
   if (s.phase !== 'QUESTION_PHASE') return null;
-  return s.players[s.questionerIndex] ?? null;
+  const id = s.revealOrder[s.questionerIndex];
+  if (!id) return null;
+  return s.players.find((p) => p.id === id) ?? null;
+};
+
+/** Returns the round's players ordered by the random reveal/play order. */
+export const selectOrderedPlayers = (s: GameStore): Player[] => {
+  const map = new Map(s.players.map((p) => [p.id, p]));
+  return s.revealOrder
+    .map((id) => map.get(id))
+    .filter((p): p is Player => Boolean(p));
 };
 
 /**

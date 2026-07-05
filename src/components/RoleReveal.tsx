@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useGameStore } from '../store/gameStore';
+import { useShallow } from 'zustand/react/shallow';
+import { useGameStore, selectOrderedPlayers } from '../store/gameStore';
 
 export default function RoleReveal() {
   const phase = useGameStore((s) => s.phase);
-  const players = useGameStore((s) => s.players);
+  const orderedPlayers = useGameStore(useShallow(selectOrderedPlayers));
   const currentRevealIndex =
     useGameStore((s) => (s.phase === 'ROLE_REVEAL' ? s.currentRevealIndex : 0));
   const category = useGameStore((s) => s.category);
@@ -20,7 +21,7 @@ export default function RoleReveal() {
 
   if (phase !== 'ROLE_REVEAL') return null;
 
-  const player = players[currentRevealIndex];
+  const player = orderedPlayers[currentRevealIndex];
   if (!player) return null;
 
   const role = roles[player.id];
