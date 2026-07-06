@@ -44,6 +44,7 @@ export type GamePhaseState =
       phase: 'QUESTION_PHASE';
       questionerIndex: number;
       timerEnd: number | null;
+      spokenPlayerIds: PlayerId[];
     }
   | { phase: 'VOTING' }
   | {
@@ -80,6 +81,7 @@ export interface GameActions {
   startGame: (packId: string) => void;
   nextPlayerRoleReveal: () => void;
   startTimer: (durationMs?: number) => void;
+  markPlayerSpoken: (playerId: PlayerId) => void;
   accusePlayer: (playerId: PlayerId) => void;
   goToVoting: () => void;
   resetGame: () => void;
@@ -235,6 +237,7 @@ export const useGameStore = create<GameStore>()(
               phase: 'QUESTION_PHASE',
               questionerIndex: 0,
               timerEnd: null,
+              spokenPlayerIds: [],
             } as GameStore;
           }
 
@@ -257,10 +260,27 @@ export const useGameStore = create<GameStore>()(
             questionerIndex:
               state.phase === 'QUESTION_PHASE' ? state.questionerIndex : 0,
             timerEnd: Date.now() + durationMs,
+            spokenPlayerIds: state.phase === 'QUESTION_PHASE' ? state.spokenPlayerIds : [],
           } as GameStore;
         },
         false,
         'startTimer'
+      ),
+
+    markPlayerSpoken: (playerId) =>
+      set(
+        (state) => {
+          if (state.phase !== 'QUESTION_PHASE') return state;
+          if (state.spokenPlayerIds.includes(playerId)) return state;
+          return {
+            phase: 'QUESTION_PHASE',
+            questionerIndex: state.questionerIndex,
+            timerEnd: state.timerEnd,
+            spokenPlayerIds: [...state.spokenPlayerIds, playerId],
+          } as GameStore;
+        },
+        false,
+        'markPlayerSpoken'
       ),
 
     accusePlayer: (playerId) =>

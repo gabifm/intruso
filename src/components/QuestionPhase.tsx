@@ -17,12 +17,16 @@ export default function QuestionPhase() {
   const timerEndRaw = useGameStore((s) =>
     s.phase === 'QUESTION_PHASE' ? s.timerEnd : null
   );
+  const spokenPlayerIds = useGameStore((s) =>
+    s.phase === 'QUESTION_PHASE' ? s.spokenPlayerIds : []
+  );
   const orderedPlayers = useGameStore(useShallow(selectOrderedPlayers));
   const questionerIndexRaw = useGameStore((s) =>
     s.phase === 'QUESTION_PHASE' ? s.questionerIndex : 0
   );
   const startTimer = useGameStore((s) => s.startTimer);
   const goToVoting = useGameStore((s) => s.goToVoting);
+  const markPlayerSpoken = useGameStore((s) => s.markPlayerSpoken);
 
   const timerEnd = timerEndRaw ?? null;
   const questionerIndex = questionerIndexRaw ?? 0;
@@ -80,39 +84,66 @@ export default function QuestionPhase() {
       </div>
 
       <section className="mb-6 flex-1">
-        <h2 className="mb-3 text-xl font-bold uppercase tracking-widest text-gray-500">
-          Orden de juego
+        <h2 className="mb-3 flex items-center justify-between text-xl font-bold uppercase tracking-widest text-gray-500">
+          <span>Orden de juego</span>
+          <span>
+            {spokenPlayerIds.length}/{orderedPlayers.length}
+          </span>
         </h2>
         <ol className="space-y-3">
           {orderedPlayers.map((p, i) => {
             const isFirst = i === 0;
+            const hasSpoken = spokenPlayerIds.includes(p.id);
             return (
               <li
                 key={p.id}
-                className={`flex items-center gap-4 rounded-2xl border-2 px-5 py-5 ${
-                  isFirst
+                className={`flex items-center gap-4 rounded-2xl border-2 px-5 py-5 transition-colors ${
+                  hasSpoken
+                    ? 'border-green-500 bg-green-500/10'
+                    : isFirst
                     ? 'border-orange-500 bg-orange-500/10'
                     : 'border-gray-700 bg-gray-800'
                 }`}
               >
                 <span
                   className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-2xl font-black ${
-                    isFirst ? 'bg-orange-500 text-white' : 'bg-gray-700 text-gray-300'
+                    hasSpoken
+                      ? 'bg-green-500 text-white'
+                      : isFirst
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-gray-700 text-gray-300'
                   }`}
                 >
-                  {i + 1}
+                  {hasSpoken ? '✓' : i + 1}
                 </span>
                 <span
                   className={`text-3xl font-black ${
-                    isFirst ? 'text-orange-400' : 'text-white'
+                    hasSpoken
+                      ? 'text-green-400'
+                      : isFirst
+                      ? 'text-orange-400'
+                      : 'text-white'
                   }`}
                 >
                   {p.name}
                 </span>
-                {isFirst && (
+                {isFirst && !hasSpoken && (
                   <span className="ml-auto rounded-full bg-orange-500/20 px-3 py-1 text-sm font-bold uppercase tracking-widest text-orange-400">
                     Empieza
                   </span>
+                )}
+                {hasSpoken && (
+                  <span className="ml-auto rounded-full bg-green-500/20 px-3 py-1 text-sm font-bold uppercase tracking-widest text-green-400">
+                    Habló
+                  </span>
+                )}
+                {!hasSpoken && (
+                  <button
+                    onClick={() => markPlayerSpoken(p.id)}
+                    className="ml-auto rounded-xl bg-gray-700 px-5 py-3 text-lg font-bold text-white active:scale-95 active:bg-green-600"
+                  >
+                    Marcar
+                  </button>
                 )}
               </li>
             );
@@ -122,7 +153,8 @@ export default function QuestionPhase() {
 
       <button
         onClick={() => goToVoting()}
-        className="w-full max-w-sm self-center rounded-2xl bg-purple-600 py-8 text-2xl font-black text-white shadow-lg shadow-purple-600/30 active:scale-95"
+        disabled={spokenPlayerIds.length < orderedPlayers.length}
+        className="w-full max-w-sm self-center rounded-2xl bg-purple-600 py-8 text-2xl font-black text-white shadow-lg shadow-purple-600/30 transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
       >
         Ir a Votación
       </button>
